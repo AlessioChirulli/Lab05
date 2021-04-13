@@ -3,14 +3,27 @@ package it.polito.tdp.anagrammi.model;
 	import java.util.ArrayList;
 	import java.util.List;
 
-	public class Model {
-	List<String> risultato;
+import it.polito.tdp.anagrammi.DAO.AnagrammaDAO;
 
-		public List<String> anagrammi(String parola){
+	public class Model {
+	List<List<String>> risultato;
+	List<String>corretti;
+	List<String> errate;
+	AnagrammaDAO anagramma;
+	
+	public Model() {
+		anagramma=new AnagrammaDAO();
+	}
+
+		public List<List<String>> anagrammi(String parola){
 			
-			risultato=new ArrayList<String>();
-			permuta("",parola,0,risultato);// LANCIA la ricorsione
+			risultato=new ArrayList<List<String>>();
+			errate=new ArrayList<String>();
+			corretti=new ArrayList<String>();
+			permuta("",parola,0,corretti,errate);// LANCIA la ricorsione
 			//cancella dalla lista le parole non valide(leggendo il dizionario)
+			risultato.add(corretti);
+			risultato.add(errate);
 			return risultato;
 			
 		}
@@ -21,13 +34,18 @@ package it.polito.tdp.anagrammi.model;
 		//lettere=le lettere della parola iniziale che ancora non abbiamo utilizzato
 		//         (=== il sotto problema che dobbiamo risolvere)
 		
-		private void permuta(String parziale,String lettere,int livello,List<String> risultato) {
+		private void permuta(String parziale,String lettere,int livello,List<String>corretti,List<String>errate) {
 			if(lettere.length()==0) { //caso terminale
 				// la soluzione parziale è anche una soluzione completa
 				//System.out.println(parziale);
 				
 				//if(parziale è una parola valida?)
-				risultato.add(parziale);
+				if(anagramma.IsCorrect(parziale))
+					corretti.add(parziale);
+				else {
+					errate.add(parziale);
+				}
+				
 			}
 			else {
 				//fai ricorsione
@@ -40,7 +58,8 @@ package it.polito.tdp.anagrammi.model;
 				     // togli il carattere pos da lettere
 					//if (nuovaParziale è un PREFISSO valido di almeno una parola nel dizionario)
 					//"aqz -> no; "car" -> si (carro,carrello,carta...)
-					permuta(nuovaParziale,nuovaLettere,livello+1,risultato);
+					if(anagramma.rootIsCorrect(nuovaParziale))
+						permuta(nuovaParziale,nuovaLettere,livello+1,corretti,errate);
 					
 					
 					//Backtracking(NON SERVE)
