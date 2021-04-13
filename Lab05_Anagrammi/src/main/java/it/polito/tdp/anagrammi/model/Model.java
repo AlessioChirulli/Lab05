@@ -40,9 +40,9 @@ import it.polito.tdp.anagrammi.DAO.AnagrammaDAO;
 				//System.out.println(parziale);
 				
 				//if(parziale è una parola valida?)
-				if(anagramma.IsCorrect(parziale))
+				if(anagramma.IsCorrect(parziale) && !corretti.contains(parziale))
 					corretti.add(parziale);
-				else {
+				else if(!anagramma.IsCorrect(parziale) && !errate.contains(parziale)) {
 					errate.add(parziale);
 				}
 				

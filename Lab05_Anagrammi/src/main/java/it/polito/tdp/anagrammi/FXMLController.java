@@ -42,7 +42,7 @@ public class FXMLController {
     txtInput.setDisable(true);
     btnAnagrammi.setDisable(true);
     if(input.length()==0) {
-    	System.out.println("Inserisci una parola!");
+    	txtInput.setText("Inserisci una parola!");
     	return ;
     }
     else {
